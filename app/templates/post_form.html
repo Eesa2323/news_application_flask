@@ -1,0 +1,39 @@
+{% extends "base.html" %} {% block title %}{{ 'Edit story' if post else 'New story' }} · Ink &
+Signal{% endblock %} {% block content %}
+<div class="editor-wrap">
+    <p class="eyebrow">{{ 'Refine your thought' if post else 'Put it into words' }}</p>
+    <h1>{{ 'Edit story' if post else 'New story' }}</h1>
+    <form
+        method="post"
+        class="form editor-form"
+    >
+        <label
+            >Title<input
+                name="title"
+                value="{{ post.title if post else '' }}"
+                required
+                maxlength="160"
+                autofocus /></label
+        ><label
+            >Your story<textarea
+                name="body"
+                rows="14"
+                required
+            >
+{{ post.body if post else '' }}</textarea
+            >
+        </label>
+        <div class="form-actions">
+            <button
+                class="button"
+                type="submit"
+            >
+                {{ 'Save changes' if post else 'Publish story' }}</button
+            ><a
+                href="{{ url_for('main.post_detail', post_id=post.id) if post else url_for('main.index') }}"
+                >Cancel</a
+            >
+        </div>
+    </form>
+</div>
+{% endblock %}

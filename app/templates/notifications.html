@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block title %}Inbox · Ink & Signal{% endblock %} {% block content %}
+<div class="notifications-page">
+    <div class="feed-heading">
+        <div>
+            <p class="eyebrow">Stay in the loop</p>
+            <h1>Inbox</h1>
+        </div>
+        <span>{{ notifications|length }} total</span>
+    </div>
+    {% if notifications %}
+    <div class="notification-list">
+        {% for item in notifications %}<a
+            class="notification {{ 'unread' if not item.is_read else '' }}"
+            href="{{ url_for('main.post_detail', post_id=item.post_id) }}"
+            ><span class="notification-mark">{{ '♥' if item.kind == 'like' else '✦' }}</span
+            ><span
+                ><strong>{{ item.message }}</strong
+                ><small>{{ item.created_at.strftime('%b %d, %Y · %H:%M') }}</small></span
+            ><span>→</span></a
+        >{% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <h3>Nothing new.</h3>
+        <p>Likes and comments on your stories will appear here.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

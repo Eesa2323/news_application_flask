@@ -1,0 +1,44 @@
+{% extends "base.html" %} {% block title %}Ink & Signal{% endblock %} {% block content %}
+<section class="hero">
+    <p class="eyebrow">A quiet place for loud ideas</p>
+    <h1>Notes from<br /><em>the living room.</em></h1>
+    <p class="hero-copy">
+        A small, human blog for essays, observations, and the things that stay with us.
+    </p>
+</section>
+<section class="feed-heading">
+    <h2>Latest stories</h2>
+    <span>{{ posts|length }} published</span>
+</section>
+{% if posts %}
+<section class="post-grid">
+    {% for post in posts %}
+    <article class="post-card">
+        <div class="post-meta">
+            <span>{{ post.created_at.strftime('%b %d, %Y') }}</span><span>·</span
+            ><span>by {{ post.author.username }}</span>
+        </div>
+        <h3><a href="{{ url_for('main.post_detail', post_id=post.id) }}">{{ post.title }}</a></h3>
+        <p>{{ post.body|truncate(190) }}</p>
+        <div class="card-footer">
+            <span>{{ post.comments|length }} comments · {{ post.likes|length }} likes</span
+            ><a
+                class="read-more"
+                href="{{ url_for('main.post_detail', post_id=post.id) }}"
+                >Read story →</a
+            >
+        </div>
+    </article>
+    {% endfor %}
+</section>
+{% else %}
+<div class="empty-state">
+    <h3>The page is blank, for now.</h3>
+    <p>Be the first voice in the room.</p>
+    {% if current_user.is_authenticated %}<a
+        class="button"
+        href="{{ url_for('main.create_post') }}"
+        >Write the first story</a
+    >{% endif %}
+</div>
+{% endif %} {% endblock %}

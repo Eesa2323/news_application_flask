@@ -1,0 +1,73 @@
+{% extends "base.html" %} {% block title %}{{ post.title }} · Ink & Signal{% endblock %} {% block
+content %}
+<article class="story">
+    <div class="post-meta">
+        <span>{{ post.created_at.strftime('%B %d, %Y') }}</span><span>·</span
+        ><span>by {{ post.author.username }}</span>
+    </div>
+    <h1>{{ post.title }}</h1>
+    <div class="story-body">{{ post.body|e|replace('\n', '<br />')|safe }}</div>
+    <div class="story-actions">
+        <form
+            method="post"
+            action="{{ url_for('main.toggle_like', post_id=post.id) }}"
+        >
+            <button
+                class="like-button {{ 'liked' if liked else '' }}"
+                type="submit"
+            >
+                {{ '♥' if liked else '♡' }} {{ post.likes|length }}
+            </button>
+        </form>
+        <span>{{ post.comments|length }} comments</span>{% if current_user.is_authenticated and
+        current_user.id == post.user_id %}<span class="action-divider"></span
+        ><a href="{{ url_for('main.edit_post', post_id=post.id) }}">Edit</a>
+        <form
+            method="post"
+            action="{{ url_for('main.delete_post', post_id=post.id) }}"
+            onsubmit="return confirm('Delete this story?')"
+        >
+            <button
+                class="text-danger"
+                type="submit"
+            >
+                Delete
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</article>
+<section class="comments">
+    <h2>Responses <span>{{ post.comments|length }}</span></h2>
+    {% if current_user.is_authenticated %}
+    <form
+        method="post"
+        action="{{ url_for('main.add_comment', post_id=post.id) }}"
+        class="comment-form"
+    >
+        <input
+            name="body"
+            placeholder="Add your perspective..."
+            required
+        /><button
+            class="button button-small"
+            type="submit"
+        >
+            Comment
+        </button>
+    </form>
+    {% else %}
+    <p class="muted"><a href="{{ url_for('auth.login') }}">Log in</a> to join the conversation.</p>
+    {% endif %}{% for comment in post.comments|sort(attribute='created_at', reverse=true) %}
+    <div class="comment">
+        <div>
+            <strong>{{ comment.author.username }}</strong
+            ><span>{{ comment.created_at.strftime('%b %d, %Y') }}</span>
+        </div>
+        <p>{{ comment.body }}</p>
+    </div>
+    {% else %}
+    <p class="muted">No responses yet. Start the conversation.</p>
+    {% endfor %}
+</section>
+{% endblock %}

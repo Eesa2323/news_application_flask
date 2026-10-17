@@ -1,0 +1,32 @@
+{% extends "base.html" %} {% block title %}Log in · Ink & Signal{% endblock %} {% block content %}
+<div class="auth-wrap">
+    <div class="auth-panel">
+        <p class="eyebrow">Welcome back</p>
+        <h1>Return to<br /><em>the conversation.</em></h1>
+        <form
+            method="post"
+            class="form"
+        >
+            <label
+                >Username or email<input
+                    name="identifier"
+                    required
+                    autofocus /></label
+            ><label
+                >Password<input
+                    type="password"
+                    name="password"
+                    required /></label
+            ><button
+                class="button"
+                type="submit"
+            >
+                Log in
+            </button>
+        </form>
+        <p class="form-note">
+            New here? <a href="{{ url_for('auth.signup') }}">Create an account</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

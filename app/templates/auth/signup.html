@@ -1,0 +1,37 @@
+{% extends "base.html" %} {% block title %}Join · Ink & Signal{% endblock %} {% block content %}
+<div class="auth-wrap">
+    <div class="auth-panel">
+        <p class="eyebrow">Make a little noise</p>
+        <h1>Find your<br /><em>first sentence.</em></h1>
+        <form
+            method="post"
+            class="form"
+        >
+            <label
+                >Username<input
+                    name="username"
+                    required
+                    autofocus /></label
+            ><label
+                >Email<input
+                    type="email"
+                    name="email"
+                    required /></label
+            ><label
+                >Password <small>6+ characters</small
+                ><input
+                    type="password"
+                    name="password"
+                    minlength="6"
+                    required /></label
+            ><button
+                class="button"
+                type="submit"
+            >
+                Create account
+            </button>
+        </form>
+        <p class="form-note">Already a member? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+    </div>
+</div>
+{% endblock %}
