@@ -1,6 +1,6 @@
 # Ink & Signal
 
-A Flask blog/news outlet with SQLite persistence, authentication, post CRUD, validation, likes, comments, and notifications.
+A lightweight Flask blog built around clean post CRUD, user authentication, and community interaction. It pairs SQLite persistence (via Flask-SQLAlchemy) with Flask-Login for session management, so readers can sign up, log in with either username or email, and publish their own posts. Authors can create, edit, and delete posts they own, while any visitor can browse the feed and read individual posts. Logged-in readers can like posts and leave comments, and each like or comment fires a notification to the post author—viewable in a per-user inbox that marks items as read when opened. Passwords are hashed with Werkzeug, duplicate likes are blocked with a unique constraint, and the whole thing boots up with a single command and a self-creating SQLite database. Ideal as a starter template or learning project for Flask, SQLAlchemy, and auth patterns.
 
 ## Features
 
