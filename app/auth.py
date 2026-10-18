@@ -11,6 +11,7 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 @auth_bp.route("/signup", methods=["GET", "POST"])
 def signup():
+    # Already logged in? Send them home instead of showing the signup form.
     if current_user.is_authenticated:
         return redirect(url_for("main.index"))
     if request.method == "POST":
@@ -37,6 +38,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for("main.index"))
     if request.method == "POST":
+        # Users can log in with either their username or email address.
         identifier = request.form["identifier"].strip()
         user = User.query.filter(or_(User.username == identifier, User.email == identifier.lower())).first()
         if not user or not user.check_password(request.form["password"]):

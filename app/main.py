@@ -10,12 +10,15 @@ main_bp = Blueprint("main", __name__)
 
 
 def notify(post, kind, message):
+    # Only ping the post author if someone else is doing the liking/commenting.
+    # No point notifying you about your own activity.
     if post.user_id != current_user.id:
         db.session.add(Notification(user_id=post.user_id, actor_id=current_user.id, post_id=post.id, kind=kind, message=message))
 
 
 @main_bp.route("/")
 def index():
+    # Grab every post, newest first, for the home page feed.
     posts = Post.query.order_by(desc(Post.created_at)).all()
     return render_template("index.html", posts=posts)
 
@@ -40,6 +43,8 @@ def create_post():
 @main_bp.route("/post/<int:post_id>")
 def post_detail(post_id):
     post = db.get_or_404(Post, post_id)
+    # Figure out if the current user already liked this post so we can show
+    # the right button state (filled heart vs outline).
     liked = current_user.is_authenticated and Like.query.filter_by(user_id=current_user.id, post_id=post.id).first()
     return render_template("post_detail.html", post=post, liked=liked)
 
@@ -82,6 +87,7 @@ def toggle_like(post_id):
     post = db.get_or_404(Post, post_id)
     like = Like.query.filter_by(user_id=current_user.id, post_id=post.id).first()
     if like:
+        # They already liked it, so unlike it.
         db.session.delete(like)
     else:
         db.session.add(Like(user_id=current_user.id, post_id=post.id))

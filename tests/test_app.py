@@ -4,6 +4,8 @@ from app import create_app, db
 from app.models import Notification, Post, User
 
 
+# Fixture that spins up the app with a throwaway SQLite database so tests
+# don't touch the real one. Cleans up everything when the test is done.
 @pytest.fixture
 def client(tmp_path):
     app = create_app(
@@ -36,6 +38,7 @@ def login(client, identifier):
 
 
 def test_blog_crud_and_notifications(client):
+    # Writer signs up and creates a post.
     signup(client, "writer", "writer@example.com")
     response = client.post(
         "/post/new",
@@ -48,6 +51,7 @@ def test_blog_crud_and_notifications(client):
         post = Post.query.one()
         post_id = post.id
 
+    # Writer logs out, reader signs up, likes the post and leaves a comment.
     client.post("/auth/logout")
     signup(client, "reader", "reader@example.com")
     client.post(f"/post/{post_id}/like", follow_redirects=True)
@@ -56,12 +60,14 @@ def test_blog_crud_and_notifications(client):
     with client.application.app_context():
         assert Notification.query.count() == 2
 
+    # Writer logs back in and checks their notifications inbox.
     client.post("/auth/logout")
     login(client, "writer")
     inbox = client.get("/notifications")
     assert b"reader liked your post" in inbox.data
     assert b"reader commented on your post" in inbox.data
 
+    # Writer edits their own post, then deletes it.
     edited = client.post(
         f"/post/{post_id}/edit",
         data={"title": "Updated note", "body": "Updated body."},
