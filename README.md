@@ -1,6 +1,6 @@
 # Ink & Signal
 
-A small Flask blog with SQLite persistence, authentication, post CRUD, likes, comments, and notifications.
+A Flask blog/news outlet with SQLite persistence, authentication, post CRUD, validation, likes, comments, and notifications.
 
 ## Features
 
